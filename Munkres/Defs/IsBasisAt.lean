@@ -2,7 +2,7 @@ import Mathlib.Data.Set.Countable
 import Mathlib.Order.OmegaCompletePartialOrder
 import Mathlib.Topology.Basic
 
-import Munkres.Defs.Neighborhood
+import Munkres.Defs.Basic
 
 namespace Munkres
 

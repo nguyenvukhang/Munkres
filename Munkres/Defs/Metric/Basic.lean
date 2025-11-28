@@ -2,7 +2,7 @@ import Mathlib.Topology.MetricSpace.Bounded -- for `Metric.diam`
 import Mathlib.Topology.UniformSpace.Cauchy -- for `TotallyBounded`
 import Mathlib.Topology.Metrizable.Basic -- for `Metrizable`
 
-import Munkres.Defs.Neighborhood
+import Munkres.Defs.Basic
 
 namespace Munkres
 
@@ -14,14 +14,6 @@ open Topology Filter ENNReal NNReal TopologicalSpace
 universe u
 
 variable {α : Type u}
-
-/-- A points x in a topological space is _isolated_ if {x} is open. -/
-def IsIsolated [TopologicalSpace α] (x : α) : Prop := IsOpen {x}
-
-/-- A topological space X is _limit point compact_ if every infinite subset of X
-has a limit point in X. -/
-class LimitPointCompact (α : Type u) [TopologicalSpace α] : Prop where
-  out : ∀ s : Set α, s.Infinite → ∃ x, AccPt x (𝓟 s)
 
 -- Equivalence of the idea of convergence. WOH.
 example [TopologicalSpace α] (f : ℕ → α) (x : α)
@@ -95,26 +87,5 @@ example [MetricSpace α] {X : Set α} :
   TotallyBounded X ↔ ∀ ε > 0, ∃ t : Set α, t.Finite ∧ X ⊆ ⋃ y ∈ t, Metric.ball y ε
   := by --
   exact Metric.totallyBounded_iff -- ∎
-
--- Equivalence for Locally Compact Spaces. Note that in Lean's Mathlib, it is
--- WeaklyLocallyCompactSpace.
---* MA3209 Proposition 2.6.9
---* Munkres Theorem 29.2
-protected theorem WeaklyLocallyCompactSpace.iff [TopologicalSpace α]
-  : WeaklyLocallyCompactSpace α ↔ ∀ x : α, ∃ c, ∃ u ∈ nhds' x, u ⊆ c ∧ IsCompact c
-  := by --
-  constructor
-  · intro h x
-    obtain ⟨c, hc, hcx⟩ := h.exists_compact_mem_nhds x
-    rw [mem_nhds_iff] at hcx
-    obtain ⟨u, huc, hu, hxu⟩ := hcx
-    exact ⟨c, u, ⟨hu, hxu⟩, huc, hc⟩
-  · intro h
-    refine {exists_compact_mem_nhds := ?_}
-    intro x
-    specialize h x
-    obtain ⟨c, u, ⟨hu, hxu⟩, huc, hc⟩ := h
-    simp only [mem_nhds_iff]
-    exact ⟨c, hc, u, huc, hu, hxu⟩ -- ∎
 
 end Munkres

@@ -10,4 +10,7 @@ variable {α : Type u} [TopologicalSpace α]
 U is an open set that contains x. -/
 def nhds' (x : α) := { u : Set α | IsOpen u ∧ x ∈ u }
 
+/-- A point `x` in a topological space is _isolated_ if `{x}` is open. -/
+def IsIsolated (x : α) : Prop := IsOpen {x}
+
 end Munkres
