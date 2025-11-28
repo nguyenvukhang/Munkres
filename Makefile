@@ -12,10 +12,7 @@ check: generate
 	slope check
 
 generate:
-	# slope generate Rudin.Alpha
-	# slope generate Rudin.Partition
-	# slope generate Rudin.Prelude
-	# slope generate Rudin.Lemmas
+	slope generate Munkres.Defs
 
 sorry:
 	rg sorry -t lean --colors 'match:fg:yellow' --colors 'line:fg:white'

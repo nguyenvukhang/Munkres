@@ -1,0 +1,13 @@
+import Mathlib.Topology.Defs.Basic
+
+namespace Munkres
+
+universe u
+
+variable {α : Type u} [TopologicalSpace α]
+
+/-- Munkres' definition of neighborhood. In the sense that if U ∈ nhds' x, then
+U is an open set that contains x. -/
+def nhds' (x : α) := { u : Set α | IsOpen u ∧ x ∈ u }
+
+end Munkres
