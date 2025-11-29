@@ -1,6 +1,7 @@
 import Munkres.Defs.Basic
 import Munkres.Defs.Compact
 import Munkres.Defs.Conversions
+import Munkres.Defs.Countable
 import Munkres.Defs.IsBasisAt
 import Munkres.Defs.Metric.Basic
 import Munkres.Defs.OpenCover
