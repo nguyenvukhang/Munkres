@@ -13,6 +13,7 @@ check: generate
 
 generate:
 	slope generate Munkres.Defs
+	slope generate Munkres.Mathlib
 
 sorry:
 	rg sorry -t lean --colors 'match:fg:yellow' --colors 'line:fg:white'
