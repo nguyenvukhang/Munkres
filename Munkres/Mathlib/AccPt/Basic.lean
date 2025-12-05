@@ -1,5 +1,4 @@
-import Mathlib.Order.OmegaCompletePartialOrder
-import Mathlib.Topology.NhdsWithin
+import Mathlib.Topology.Separation.Basic
 import Munkres.Defs.Basic
 
 open Filter Set Munkres
@@ -27,7 +26,7 @@ theorem mem_closure_iff_accPt {x : α} : x ∈ closure s ↔ x ∈ s ∨ AccPt x
   exact clusterPt_principal -- ∎
 
 --* closure A = A ∪ A'
-theorem AccPt.union_eq_closure : s ∪ { x | AccPt x (𝓟 s)} = closure s
+theorem AccPt.union_eq_closure : s ∪ { x | AccPt x (𝓟 s) } = closure s
   := by --
   refine Set.ext fun x ↦ ?_
   simp only [mem_closure_iff_accPt]
@@ -85,3 +84,36 @@ example [h₀ : Nonempty α] : ∃ (A : Set α) (x : α) (f : ℕ → α),
     specialize h univ isOpen_univ trivial
     rw [sdiff_self, bot_eq_empty, inter_empty] at h
     exact Set.not_nonempty_empty h -- ∎
+
+protected theorem AccPt.t1_infinite_iff [T1Space α]
+  : AccPt x (𝓟 s) ↔ ∀ u, IsOpen u → x ∈ u → (u ∩ s).Infinite
+  := by --
+  constructor
+  · intro ha u hu hxu
+    by_contra hf
+    rw [not_infinite] at hf
+    let t := u ∩ (s \ {x})
+    have : t.Finite := hf.subset (inter_subset_inter_right _ diff_subset)
+    -- `t.Finite → IsClosed t` follows from α being T1.
+    have : IsOpen tᶜ := this.isClosed.isOpen_compl
+    have hut : IsOpen (u ∩ tᶜ) := hu.inter this
+    have hxut : x ∈ u ∩ tᶜ := by
+      refine ⟨hxu, ?_⟩
+      rw [mem_compl_iff, mem_inter_iff, mem_diff]
+      push_neg
+      intro _ _
+      exact rfl
+    rw [AccPt.iff] at ha
+    specialize ha (u ∩ tᶜ) hut hxut
+    rw [inter_right_comm, inter_compl_self t] at ha
+    exact Set.not_nonempty_empty ha
+  · intro hf
+    rw [AccPt.iff]
+    intro u hu hxu
+    specialize hf u hu hxu
+    obtain ⟨y, hne, hyu, hys⟩ : ∃ y ≠ x, y ∈ u ∩ s := by
+      by_contra! h
+      refine hf ?_
+      have : u ∩ s ⊆ {x} := Set.compl_subset_compl.mp h
+      exact (Set.finite_singleton x).subset this
+    exact ⟨y, hyu, hys, hne⟩ -- ∎

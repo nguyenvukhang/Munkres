@@ -1,12 +1,37 @@
 import Munkres.Mathlib.Prelude
 
-open TopologicalSpace
+open Set TopologicalSpace
 
 universe u
 
 variable {α : Type u} {B : Set (Set α)}
 
 section DefiningABasis
+
+-- The reason why we reduce all finite intersection arguments to just the
+-- intersection of two elements — that we can extend it to finite intersections
+-- by induction.
+example {B : Set (Set α)}
+  (h : ∀ b₁ ∈ B, ∀ b₂ ∈ B, b₁ ∩ b₂ ∈ B)
+  (h_univ : univ ∈ B)
+  : ∀ s ⊆ B, s.Finite → ⋂₀ s ∈ B
+  := by --
+  intro s hsB hsF
+  induction s, hsF using Set.Finite.induction_on with
+  | empty =>
+    rw [sInter_empty]
+    exact h_univ
+  | @insert u s hus hsF ih =>
+    have huB : u ∈ B := hsB <| mem_insert u s
+    if hs₀ : s = ∅ then
+      subst hs₀
+      simp only [insert_empty_eq, sInter_singleton]
+      exact huB
+    else
+    replace hs₀ : s.Nonempty := nonempty_iff_ne_empty.mpr hs₀
+    specialize ih ((subset_insert u s).trans hsB)
+    rw [sInter_insert u s]
+    exact h u huB _ ih -- ∎
 
 variable
   (h₁ : ∀ x, ∃ b ∈ B, x ∈ b)

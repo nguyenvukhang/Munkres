@@ -13,6 +13,7 @@ check: generate
 
 generate:
 	slope generate Munkres.Defs
+	slope generate Munkres.Defs.MA3209
 	slope generate Munkres.Mathlib
 	slope generate Munkres.Mathlib.Set
 	slope generate Munkres.Mathlib.AccPt
