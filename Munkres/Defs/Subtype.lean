@@ -1,7 +1,5 @@
 import Mathlib.Topology.Separation.Hausdorff
 
-namespace Munkres
-
 universe u
 
 variable {α : Type u}
@@ -20,5 +18,3 @@ structure IsClosedIn (A X : Set α) [TopologicalSpace X] : Prop where
 structure IsCompactIn (A X : Set α) [TopologicalSpace X] : Prop where
   isCompact' : @IsCompact X _ (Subtype.val ⁻¹' A)
   subset' : A ⊆ X
-
-end Munkres

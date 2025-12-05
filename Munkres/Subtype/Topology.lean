@@ -4,8 +4,6 @@ import Munkres.Defs.Subtype
 
 open Set
 
-namespace Munkres
-
 universe u
 
 variable {α : Type u}
@@ -83,7 +81,7 @@ example [TopologicalSpace α] {A X : Set α}
 section IsOpenIn
 variable {X Y A : Set α}
 
-theorem IsOpenIn.lift [TopologicalSpace α]
+theorem IsOpenIn.trans [TopologicalSpace α]
   : IsOpenIn A X → IsOpen X → IsOpen A
   := by --
   intro hAX hX
@@ -95,11 +93,46 @@ theorem IsOpenIn.lift [TopologicalSpace α]
   subst hA
   exact hX.inter hU -- ∎
 
+theorem IsOpenIn.iff_inter [TopologicalSpace X]
+  : IsOpenIn (A ∩ X) X ∧ A ⊆ X ↔ IsOpenIn A X
+  := by --
+  constructor
+  · intro ⟨h, hAX⟩
+    refine { isOpen' := ?_, subset' := hAX }
+    replace h := h.isOpen'
+    rw [preimage_inter, Subtype.coe_preimage_self, inter_univ] at h
+    exact h
+  · intro h
+    refine ⟨?_, h.subset'⟩
+    rw [inter_eq_left.mpr h.subset']
+    exact h -- ∎
+
+theorem IsOpen.isOpenIn [TopologicalSpace α] (hA : IsOpen A) (X : Set α)
+  : IsOpenIn (A ∩ X) X
+  := by --
+  refine { isOpen' := ?_, subset' := inter_subset_right }
+  rw [isOpen_induced_iff]
+  exact ⟨A, hA, (Subtype.preimage_coe_inter_self X A).symm⟩ -- ∎
+
+theorem IsOpenIn.iff [TopologicalSpace α]
+  : IsOpenIn A Y ↔ ∃ U, IsOpen U ∧ A = U ∩ Y
+  := by --
+  constructor
+  · intro h
+    obtain ⟨U, hU, heq⟩ := isOpen_induced_iff.mpr h.isOpen'
+    refine ⟨U, hU, ?_⟩
+    rw [<-Set.inter_eq_self_of_subset_right h.subset']
+    rw [inter_comm U Y]
+    rw [<-Subtype.preimage_coe_eq_preimage_coe_iff, heq]
+  · intro ⟨U, hU, heq⟩
+    subst heq
+    exact hU.isOpenIn Y -- ∎
+
 end IsOpenIn
 section IsClosedIn
 variable {X Y A : Set α}
 
-theorem IsClosedIn.lift [TopologicalSpace α]
+theorem IsClosedIn.trans [TopologicalSpace α]
   : IsClosedIn A X → IsClosed X → IsClosed A
   := by --
   intro hAX hX
@@ -111,5 +144,39 @@ theorem IsClosedIn.lift [TopologicalSpace α]
   subst hA
   exact hX.inter hU -- ∎
 
+theorem IsClosedIn.iff_inter [TopologicalSpace X]
+  : IsClosedIn (A ∩ X) X ∧ A ⊆ X ↔ IsClosedIn A X
+  := by --
+  constructor
+  · intro ⟨h, hAX⟩
+    refine { isClosed' := ?_, subset' := hAX }
+    replace h := h.isClosed'
+    rw [preimage_inter, Subtype.coe_preimage_self, inter_univ] at h
+    exact h
+  · intro h
+    refine ⟨?_, h.subset'⟩
+    rw [inter_eq_left.mpr h.subset']
+    exact h -- ∎
+
+theorem IsClosed.isClosedIn [TopologicalSpace α] (hA : IsClosed A) (X : Set α)
+  : IsClosedIn (A ∩ X) X
+  := by --
+  refine { isClosed' := ?_, subset' := inter_subset_right }
+  rw [isClosed_induced_iff]
+  exact ⟨A, hA, (Subtype.preimage_coe_inter_self X A).symm⟩ -- ∎
+
+theorem IsClosedIn.iff [TopologicalSpace α]
+  : IsClosedIn A Y ↔ ∃ U, IsClosed U ∧ A = U ∩ Y
+  := by --
+  constructor
+  · intro h
+    obtain ⟨U, hU, heq⟩ := isClosed_induced_iff.mp h.isClosed'
+    refine ⟨U, hU, ?_⟩
+    rw [<-Set.inter_eq_self_of_subset_right h.subset']
+    rw [inter_comm U Y]
+    rw [<-Subtype.preimage_coe_eq_preimage_coe_iff, heq]
+  · intro ⟨U, hU, heq⟩
+    subst heq
+    exact hU.isClosedIn Y -- ∎
+
 end IsClosedIn
-end Munkres
