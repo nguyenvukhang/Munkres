@@ -14,6 +14,8 @@ check: generate
 generate:
 	slope generate Munkres.Defs
 	slope generate Munkres.Mathlib
+	slope generate Munkres.Mathlib.Set
+	slope generate Munkres.Mathlib.AccPt
 
 sorry:
 	rg sorry -t lean --colors 'match:fg:yellow' --colors 'line:fg:white'
